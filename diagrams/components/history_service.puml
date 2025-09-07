@@ -1,0 +1,33 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+ 
+    title Диаграмма компонентов "Мониторинг"
+
+    Container(web_app, "Веб приложение", "C#, ASP.NET MVC", "")
+    Container(device_ctrl_service, "Управление устройставми", "C#, ASP.NET MVC", "")
+    ContainerDb(db, "Database", "Postgres")
+    ContainerDb(mqtt, "Broker", "")
+    
+
+    Container_Boundary(api, "Мониторинг") {
+        Component(history_controller, "History Controller", "MVC Rest Controller", "")
+        
+        Component(recorder_svc, "Recorder service", "", "")
+        Component(history_svc, "History service", "", "")
+        Component(history_repository, "History repository", "", "")
+        Component(recorder_repository, "Recorder repository", "", "")
+        
+        
+        Rel(history_controller, history_svc, "Использует")
+        Rel(history_svc, history_repository, "Использует")
+        Rel(history_repository, db, "Использует")
+        Rel(recorder_svc, recorder_repository, "Использует")
+        Rel(recorder_repository, db, "Использует")
+        Rel_Back(recorder_svc, mqtt, "Использует")
+    }
+
+Rel(web_app, history_controller, "Использует")
+Rel(device_ctrl_service, history_controller, "Использует")
+
+@enduml

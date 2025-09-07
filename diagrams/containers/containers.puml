@@ -1,0 +1,40 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+SHOW_PERSON_OUTLINE()
+Person(user, "user", "Пользователь системы")
+
+System_Boundary(c1, "Теплый дом") {
+    Container(web_app, "Веб приложение", "C#, ASP.NET MVC")
+    Container(remote_control_service, "Удаленное управление устройствами", "C#, ASP.NET MVC")
+    Container(mqtt,"MQTT брокер")
+    Container(user_management_service,"Управление пользователями", "Keycloak")
+    Container(access_service,"Контроль доступа", "C#, ASP.NET MVC")
+    ContainerDb(db4, "Права доступа", "PostgresSQL")
+    Container(monitoring_service,"Мониторинг", "C#, ASP.NET MVC")
+    ContainerDb(db, "Устройства", "PostgresSQL")
+    ContainerDb(db2, "Исторические данные", "PostgresSQL")
+    ContainerDb(db3, "Пользователи", "PostgresSQL")
+}
+
+System_Ext(heat_module, "Модуль отопления", "", "", "hardware system")
+System_Ext(temp_module, "Сенсор температуры", "", "", "hardware system")
+
+Rel(user, web_app, "использует", "https")
+Rel(web_app, remote_control_service, "использует", "JSON/HTTP")
+Rel(web_app, monitoring_service, "использует", "JSON/HTTP")
+Rel(web_app, user_management_service, "использует", "JSON/HTTP")
+Rel(remote_control_service, db, "использует", "SQL/TCP")
+Rel(remote_control_service, mqtt, "получает данные", "MQTT")
+Rel(monitoring_service, mqtt, "получает данные", "MQTT")
+Rel(heat_module, mqtt, "получает команды/посылает события", "MQTT")
+Rel(mqtt, temp_module, "получает данные", "MQTT")
+Rel(monitoring_service, db2, "использует", "SQL/TCP")
+Rel(user_management_service, db3, "использует", "SQL/TCP")
+Rel(access_service, db4, "использует", "SQL/TCP")
+Rel(monitoring_service, access_service, "получает данные", "JSON/HTTP")
+Rel(remote_control_service, access_service, "получает данные", "JSON/HTTP")
+Rel(web_app, access_service, "получает данные", "JSON/HTTP")
+
+
+
+@enduml

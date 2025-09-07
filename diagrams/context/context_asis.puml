@@ -1,0 +1,17 @@
+@startuml Basic Sample
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title Диаграмма контекста системы "Умный дом"
+
+Person(user, "Пользователь системы")
+
+
+System(web_app, "Веб приложение", "Позволяеет управлять отоплением в доме и проверять температуру.")
+
+System_Ext(heater, "Модуль отопления", "", "", "hardware system")
+System_Ext(temp_sensor, "Сенсор температуры", "", "", "hardware system")
+
+Rel(user, web_app, "Использует", "HTTPS")
+Rel_Back(web_app, heater, "Получает команды вкл/выкл", "MQTT")
+Rel(web_app, temp_sensor, "Получает телеметрию", "MQTT")
+@enduml
