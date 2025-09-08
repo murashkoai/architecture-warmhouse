@@ -1,0 +1,31 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+ 
+    title Диаграмма компонентов "Управление устройствами"
+
+    Container(web_app, "Веб приложение", "C#, ASP.NET MVC", "")
+    Container(access_control, "Контроль доступа", "C#, ASP.NET MVC", "")
+    ContainerDb(db, "Database", "")
+    ContainerDb(mqtt, "Broker", "")
+    
+
+    Container_Boundary(api, "Управление устройствами") {
+        Component(device_controller, "Device Controller", "", "")
+        Component(topic_publisher, "Topic publisher", "", "")
+        Component(device_ctrl_service, "Device control service", "", "")
+        Component(device_mgmt_repository, "Device service repository", "", "")
+        
+        Rel(device_controller, device_ctrl_service, "Использует")
+        Rel(device_ctrl_service, device_mgmt_repository, "Использует")
+        Rel(device_mgmt_repository, db, "Пишет/Читает", "TCP, SQL")
+        Rel_Back(device_ctrl_service, topic_publisher, "Использует")
+        Rel(device_ctrl_service, access_control, "Использует")
+        
+    }
+
+    Rel(web_app, device_controller, "Использует", "JSON/HTTPS")
+    Rel_D(mqtt, topic_publisher, "Использует", "JSON/HTTPS")
+
+
+@enduml

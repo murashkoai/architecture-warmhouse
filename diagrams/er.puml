@@ -1,0 +1,47 @@
+@startuml
+
+skinparam linetype ortho
+entity "User" as u {
+*id : bigint <<PK>>
+--
+*first_name : text
+*last_name : text
+description : text
+}
+entity "Home" as h {
+*id : bigint <<PK>>
+--
+*user_id : bigint <<PK>>
+*name : text
+description : text
+}
+entity "Device" as d {
+*id : bigint <<PK>>
+--
+*home_id : bigint <<FK>>
+*type_id : bigint <<FK>>
+name : text
+serial_number: text
+status: boolean
+}
+entity "DeviceType" as dt {
+*id : bigint <<PK>>
+--
+name : text
+description : text
+}
+entity "Telemetry" as t {
+*id : bigint <<PK>>
+--
+*device_id : bigint <<FK>>
+timestamp : timestamp
+value : text
+
+}
+u ||..o{ h
+h ||..o{ d
+dt||..o{ d
+d ||..o{ t
+
+
+@enduml

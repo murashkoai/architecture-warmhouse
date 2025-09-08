@@ -1,0 +1,30 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+ 
+    title Диаграмма компонентов "Контроль доступа"
+
+    Container(web_app, "Веб приложение", "C#, ASP.NET MVC")
+    Container(device_ctrl_service, "Управление устройставми", "C#, ASP.NET MVC")
+    Container(monitoring_service, "Мониторинг", "C#, ASP.NET MVC")
+    ContainerDb(db, "Database", "")
+
+    Container_Boundary(api, "Контроль доступа") {
+        Component(access_controller, "Access Controller", "MVC Rest Controller", "")
+        
+
+        Component(access_service, "Access service", "", "")
+        Component(access_repository, "Access repository", "", "")
+
+        
+        Rel(access_controller, access_service, "Использует")
+        Rel(access_service, access_repository, "Использует")
+        Rel(access_repository, db, "Использует")
+
+    }
+
+Rel(web_app, access_controller, "Использует")
+Rel(device_ctrl_service, access_controller, "Использует")
+Rel(monitoring_service, access_controller, "Использует")
+
+@enduml
